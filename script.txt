@@ -1,0 +1,76 @@
+#RPI UDATE AND INSTALL
+sudo apt update
+sudo apt upgrade
+sudo reboot
+
+sudo raspi-config
+
+#INSTALL HOTSPOT
+sudo apt install hostapd dnsmasq
+
+#CONFIGURE HOTSPOT
+sudo nano /etc/hostapd/hostapd.conf
+
+
+interface=wlan0
+driver=nl80211
+ssid=RaspberryTips-Wifi
+hw_mode=g
+channel=6
+wmm_enabled=0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=<YOURPASSWORD>
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+
+#CONGIFURE HOTSPOT SUCH THST IT WILL RUN ON EVERY RESTART
+sudo nano /etc/default/hostapd
+
+DAEMON_CONF="/etc/hostapd/hostapd.conf"
+
+#ENABALING HOTSPOT (DNSmasq)
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd
+
+interface=wlan0
+bind-dynamic
+domain-needed
+bogus-priv
+dhcp-range=192.168.42.100,192.168.42.200,255.255.255.0,12h
+
+#IP FORWARDING
+sudo nano /etc/sysctl.conf
+
+net.ipv4.ip_forward=1
+
+sudo reboot
+
+#LISTING CURRENT CONFIGURATION OF IPTABLE
+sudo iptables -L
+
+#FLUSH CURRENT CONFIGURATION OF IPTABLE
+sudo iptables -F
+
+## ADD CONFIGURATION OF IPTABLE ##
+
+#BLOCK HTTP 
+sudo iptables -A FORWARD -p tcp --dport 80 -j DROP
+
+#BLOCK META(FACEBOOK)
+sudo iptables -I INPUT 1 -s 172.217.0.0/16 -j DROP
+sudo iptables -I FORWARD 1 -s 172.217.0.0/16 -j DROP
+
+#BLOCK YOUTUBE
+sudo iptables -I INPUT 2 -s 157.240.0.0/16 -j DROP
+sudo iptables -I FORWARD 2 -s 157.240.0.0/16 -j DROP
+
+#BLOCK HTTPS
+sudo iptables -A FORWARD -p tcp --dport 443 -j DROP
+
+
+
+
