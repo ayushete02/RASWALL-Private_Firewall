@@ -18,14 +18,10 @@ Power on your Raspberry Pi and wait for it to boot up.
 
 SSH into your Raspberry Pi using the default username (pi) and password (raspberry).
 
-Clone the Raswall project from the Github repository using the following command:
+1. Clone the Raswall project from the Github repository 
 
-bash
+2. Run the installation script using the following command
 
-git clone https://github.com/yourusername/raswall.git
-Run the installation script using the following command:
-
-bash
 
 sudo ./install.sh
 Follow the prompts to configure the firewall settings, including the network interface to monitor and the ports to allow/block.
